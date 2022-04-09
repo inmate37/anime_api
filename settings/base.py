@@ -28,6 +28,8 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
+
+    'rest_framework',
 ]
 PROJECT_APPS = [
     'abstracts.apps.AbstractsConfig',
