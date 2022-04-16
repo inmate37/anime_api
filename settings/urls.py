@@ -1,3 +1,5 @@
+from typing import Any
+
 from rest_framework.routers import DefaultRouter
 
 from django.contrib import admin
@@ -8,10 +10,11 @@ from django.urls import (
 )
 from django.conf.urls.static import static
 
+from auths.views import CustomUserViewSet
+
 
 urlpatterns = [
     path(settings.ADMIN_SITE_URL, admin.site.urls),
-    path('', include('auths.urls')),
 ] + static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT
@@ -28,15 +31,16 @@ if settings.DEBUG:
 # ------------------------------------------------
 # API-Endpoints
 #
-# router = DefaultRouter(
-#     trailing_slash=False
-# )
-# app_name = 'router'
+app_name = 'router'
 
+router: DefaultRouter = DefaultRouter(
+    trailing_slash=False
+)
+router.register('auths', CustomUserViewSet)
 
-# urlpatterns += [
-#     path(
-#         'api/v1/',
-#         include((router.urls, app_name), namespace='v1')
-#     )
-# ]
+urlpatterns += [
+    path(
+        'api/v1/',
+        include((router.urls, app_name), namespace='v1')
+    )
+]

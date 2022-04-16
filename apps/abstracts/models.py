@@ -2,6 +2,8 @@ from django.db import models
 
 
 class AbstractDateTime(models.Model):
+    """Abstract entity for logging by time."""
+
     datetime_created = models.DateTimeField(
         verbose_name='время создания',
         auto_now_add=True
