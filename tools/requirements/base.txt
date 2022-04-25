@@ -16,3 +16,4 @@ django-debug-toolbar==3.2.4
 # Third-party
 #
 djangorestframework==3.13.1
+requests==2.27.1

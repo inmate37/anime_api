@@ -10,7 +10,12 @@ from django.urls import (
 )
 from django.conf.urls.static import static
 
-from auths.views import CustomUserViewSet
+from auths.views import (
+    CustomUserViewSet,
+)
+from anime.views import (
+    AnimeViewSet,
+)
 
 
 urlpatterns = [
@@ -31,16 +36,15 @@ if settings.DEBUG:
 # ------------------------------------------------
 # API-Endpoints
 #
-app_name = 'router'
-
 router: DefaultRouter = DefaultRouter(
     trailing_slash=False
 )
 router.register('auths', CustomUserViewSet)
+router.register('anime', AnimeViewSet)
 
 urlpatterns += [
     path(
         'api/v1/',
-        include((router.urls, app_name), namespace='v1')
+        include(router.urls)
     )
 ]
