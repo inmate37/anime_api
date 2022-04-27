@@ -9,16 +9,17 @@ from rest_framework.request import Request as DRF_Request
 
 from django.db.models import QuerySet
 
+from abstracts.validators import APIValidator
+from abstracts.paginators import (
+    AbstractPageNumberPaginator,
+    AbstractLimitOffsetPaginator,
+)
 from anime.models import Anime
 from anime.serializers import (
     AnimeSerializer,
 )
 from anime.permissions import (
     AnimePermission,
-)
-from abstracts.paginators import (
-    AbstractPageNumberPaginator,
-    AbstractLimitOffsetPaginator,
 )
 
 
@@ -89,3 +90,32 @@ class AnimeViewSet(ViewSet):
                 serializer.data
             )
         return response
+
+    def create(self, request: DRF_Request) -> DRF_Response:
+        """Handles POST-request to show custom_users."""
+        ...
+
+    def retrieve(self, request: DRF_Request, pk: int = 0) -> DRF_Response:
+        """Handles GET-request with ID to show custom_user."""
+
+        raise APIValidator(
+            '\'GET\' метод не имплементирован',
+            'warning',
+            '403'
+        )
+
+    def partial_update(
+        self,
+        request: DRF_Request,
+        pk: int = 0
+    ) -> DRF_Response:
+        """Handles PATCH-request with ID to show custom_user."""
+        ...
+
+    def update(self, request: DRF_Request) -> DRF_Response:
+        """Handles PUT-request with ID to show custom_user."""
+        ...
+
+    def destroy(self, request: DRF_Request, pk: int = 0) -> DRF_Response:
+        """Handles DELETE-request with ID to show custom_user."""
+        ...

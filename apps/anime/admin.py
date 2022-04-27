@@ -32,7 +32,11 @@ class TitleAdmin(admin.ModelAdmin):
 
 class AnimeAdmin(admin.ModelAdmin):
 
-    readonly_fields = ()
+    readonly_fields = (
+        'datetime_created',
+        'datetime_updated',
+        'datetime_deleted',
+    )
 
 
 class GenreAdmin(admin.ModelAdmin):

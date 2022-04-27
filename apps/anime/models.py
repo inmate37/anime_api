@@ -14,6 +14,7 @@ from django.db.models import (
     CASCADE,
 )
 from abstracts.models import AbstractDateTime
+from abstracts.validators import AbstractValidator
 
 
 class Description(Model):
@@ -97,7 +98,7 @@ class AnimeQuerySet(QuerySet):
         )
 
 
-class Anime(AbstractDateTime):
+class Anime(AbstractDateTime, AbstractValidator):
     """Anime entity."""
 
     studio = CharField(
@@ -135,7 +136,13 @@ class Anime(AbstractDateTime):
     def __str__(self) -> str:
         return f'{self.studio} | {self.title.name}, {self.rating}'
 
+    def clean(self) -> None:
+        self.validate_release_date(
+            self.release_date.date
+        )
+
     def save(self, *args: tuple, **kwargs: dict) -> None:
+        self.full_clean()
         super().save(*args, **kwargs)
 
     def delete(self) -> None:

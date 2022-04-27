@@ -9,6 +9,7 @@ from rest_framework.request import Request as DRF_Request
 
 from django.db.models import QuerySet
 
+from abstracts.validators import APIValidator
 from auths.models import CustomUser
 from auths.serializers import CustomUserSerializer
 
@@ -108,15 +109,19 @@ class CustomUserViewSet(ViewSet):
     ) -> DRF_Response:
         """Handles PATCH-request with ID to show custom_user."""
 
-        return DRF_Response(
-            {'response': 'Метод partial_update'}
+        raise APIValidator(
+            '\'PATCH\' метод не имплементирован',
+            'warning',
+            '403'
         )
 
     def update(self, request: DRF_Request) -> DRF_Response:
         """Handles PUT-request with ID to show custom_user."""
 
-        return DRF_Response(
-            {'response': 'Метод update'}
+        raise APIValidator(
+            '\'PUT\' метод не имплементирован',
+            'warning',
+            '403'
         )
 
     def destroy(self, request: DRF_Request, pk: int = 0) -> DRF_Response:
