@@ -1,7 +1,10 @@
 from typing import Optional
 from datetime import datetime
 
-from rest_framework import permissions
+from rest_framework.permissions import (
+    AllowAny,
+    # IsAuthenticated,
+)
 from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response as DRF_Response
@@ -39,14 +42,18 @@ class AnimeViewSet(ViewSet):
         AbstractPageNumberPaginator
 
     def get_queryset(self) -> QuerySet[Anime]:
-        return self.queryset
+        return self.queryset.select_related(
+            'title',
+            'release_date',
+            'description',
+        )
 
     @action(
         methods=['get'],
         detail=False,
         url_path='list-2',
         permission_classes=(
-            permissions.AllowAny,
+            AllowAny,
         )
     )
     def list_2(self, request: DRF_Request) -> DRF_Response:
@@ -90,6 +97,10 @@ class AnimeViewSet(ViewSet):
                 serializer.data
             )
         return response
+
+        # return DRF_Response(
+        #     {'response': serializer.data}
+        # )
 
     def create(self, request: DRF_Request) -> DRF_Response:
         """Handles POST-request to show custom_users."""

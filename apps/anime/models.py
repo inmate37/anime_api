@@ -17,29 +17,6 @@ from abstracts.models import AbstractDateTime
 from abstracts.validators import AbstractValidator
 
 
-class Description(Model):
-    """Description entity."""
-
-    text_en = TextField(
-        verbose_name='текст на английском',
-        default=''
-    )
-    text_ru = TextField(
-        verbose_name='текст на русском',
-        default=''
-    )
-
-    class Meta:
-        ordering = (
-            '-id',
-        )
-        verbose_name = 'описание'
-        verbose_name_plural = 'описания'
-
-    def __str__(self) -> str:
-        return f'Описание тайтла: {self.anime.title.name}'
-
-
 class Title(Model):
     """Title entity."""
 
@@ -117,12 +94,8 @@ class Anime(AbstractDateTime, AbstractValidator):
     title = OneToOneField(
         Title,
         on_delete=CASCADE,
-        verbose_name='название'
-    )
-    description = OneToOneField(
-        Description,
-        on_delete=CASCADE,
-        verbose_name='описание'
+        verbose_name='название',
+        null=True, blank=True
     )
     objects = AnimeQuerySet().as_manager()
 
@@ -151,6 +124,35 @@ class Anime(AbstractDateTime, AbstractValidator):
             update_field=['datetime_deleted']
         )
         # super().delete()
+
+
+class Description(Model):
+    """Description entity."""
+
+    anime = OneToOneField(
+        Anime,
+        on_delete=CASCADE,
+        verbose_name='аниме',
+        null=True, blank=True
+    )
+    text_en = TextField(
+        verbose_name='текст на английском',
+        default=''
+    )
+    text_ru = TextField(
+        verbose_name='текст на русском',
+        default=''
+    )
+
+    class Meta:
+        ordering = (
+            '-id',
+        )
+        verbose_name = 'описание'
+        verbose_name_plural = 'описания'
+
+    def __str__(self) -> str:
+        return 'Описание тайтла'
 
 
 class Genre(Model):
