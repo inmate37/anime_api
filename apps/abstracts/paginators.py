@@ -25,7 +25,7 @@ class AbstractPageNumberPaginator(PageNumberPagination):
                         'previous': self.get_previous_link(),
                         'count': self.page.paginator.num_pages,
                     },
-                    'data': data
+                    'results': data
                 }
             )
         return response
@@ -47,7 +47,7 @@ class AbstractLimitOffsetPaginator(LimitOffsetPagination):
                         'next': self.get_next_link(),
                         'previous': self.get_previous_link(),
                     },
-                    'data': data
+                    'results': data
                 }
             )
         return response

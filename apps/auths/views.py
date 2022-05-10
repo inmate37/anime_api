@@ -10,11 +10,12 @@ from rest_framework.request import Request as DRF_Request
 from django.db.models import QuerySet
 
 from abstracts.validators import APIValidator
+from abstracts.mixins import JsonResponseMixin
 from auths.models import CustomUser
 from auths.serializers import CustomUserSerializer
 
 
-class CustomUserViewSet(ViewSet):
+class CustomUserViewSet(JsonResponseMixin, ViewSet):
     """ViewSet for CustomUser."""
 
     permission_classes: tuple = (
@@ -45,8 +46,8 @@ class CustomUserViewSet(ViewSet):
         data: list = [
             user.id for user in self.get_queryset()
         ]
-        return DRF_Response(
-            {'data': data}
+        return self.get_json_response(
+            data
         )
 
     def list(self, request: DRF_Request) -> DRF_Response:
@@ -57,9 +58,8 @@ class CustomUserViewSet(ViewSet):
                 self.get_queryset(),
                 many=True
             )
-
-        return DRF_Response(
-            {'response': serializer.data}
+        return self.get_json_response(
+            serializer.data
         )
 
     def create(self, request: DRF_Request) -> DRF_Response:
@@ -70,12 +70,14 @@ class CustomUserViewSet(ViewSet):
                 data=request.data
             )
         if serializer.is_valid():
+
             serializer.save()
-            return DRF_Response(
-                {'data': f'Объект {serializer.id} создан'}
+
+            return self.get_json_response(
+                f'Объект {serializer.id} создан'
             )
-        return DRF_Response(
-            {'response': 'Объект не создан'}
+        return self.get_json_response(
+            'Объект не создан'
         )
 
     def retrieve(self, request: DRF_Request, pk: int = 0) -> DRF_Response:
@@ -89,17 +91,15 @@ class CustomUserViewSet(ViewSet):
                 id=pk
             )
         except CustomUser.DoesNotExist:
-            return DRF_Response(
-                {'response': 'Не нашел такого юзера'}
+            return self.get_json_response(
+                'Не нашел такого юзера'
             )
-
         serializer: CustomUserSerializer = \
             CustomUserSerializer(
                 custom_user
             )
-
-        return DRF_Response(
-            {'response': serializer.data}
+        return self.get_json_response(
+            serializer.data
         )
 
     def partial_update(
@@ -133,14 +133,14 @@ class CustomUserViewSet(ViewSet):
                 id=pk
             )
         except CustomUser.DoesNotExist:
-            return DRF_Response(
-                {'data': f'Объект с ID: {pk} не найден'}
+            return self.get_json_response(
+                f'Объект с ID: {pk} не найден'
             )
 
         custom_user.datetime_deleted = datetime.now()
         custom_user.save(
             update_fields=['datetime_deleted']
         )
-        return DRF_Response(
-            {'data': f'Объект {custom_user.id} удален'}
+        return self.get_json_response(
+            f'Объект {custom_user.id} удален'
         )

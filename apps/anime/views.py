@@ -17,6 +17,7 @@ from abstracts.paginators import (
     AbstractPageNumberPaginator,
     AbstractLimitOffsetPaginator,
 )
+from abstracts.mixins import JsonResponseMixin
 from anime.models import Anime
 from anime.serializers import (
     AnimeSerializer,
@@ -26,7 +27,7 @@ from anime.permissions import (
 )
 
 
-class AnimeViewSet(ViewSet):
+class AnimeViewSet(JsonResponseMixin, ViewSet):
     """ViewSet for Anime."""
 
     permission_classes: tuple = (
@@ -71,11 +72,10 @@ class AnimeViewSet(ViewSet):
                 objects,
                 many=True
             )
-        response: DRF_Response = \
-            paginator.get_paginated_response(
-                serializer.data
-            )
-        return response
+        return self.get_json_response(
+            serializer.data,
+            paginator
+        )
 
     def list(self, request: DRF_Request) -> DRF_Response:
         """Handles GET-request to list Anime."""
@@ -92,15 +92,10 @@ class AnimeViewSet(ViewSet):
                 objects,
                 many=True
             )
-        response: DRF_Response = \
-            paginator.get_paginated_response(
-                serializer.data
-            )
-        return response
-
-        # return DRF_Response(
-        #     {'response': serializer.data}
-        # )
+        return self.get_json_response(
+            serializer.data,
+            paginator
+        )
 
     def create(self, request: DRF_Request) -> DRF_Response:
         """Handles POST-request to show custom_users."""
